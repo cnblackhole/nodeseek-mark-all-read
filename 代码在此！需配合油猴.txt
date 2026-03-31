@@ -1309,7 +1309,7 @@
 
     const NSX_CLEAR_CSS = `
 .nsx-clear-anchor{position:relative;display:inline-block}
-#nsx-clear-unread-btn{display:none;position:absolute;bottom:-25px;right:-50px;width:14px;height:14px;border-radius:50%;background:rgba(229,113,91,0.9);border:1.5px solid #fff;cursor:pointer;align-items:center;justify-content:center;transition:transform .15s,background .15s;z-index:10;padding:0}
+#nsx-clear-unread-btn{display:none;position:absolute;bottom:-25px;right:-40px;width:14px;height:14px;border-radius:50%;background:rgba(229,113,91,0.9);border:1.5px solid #fff;cursor:pointer;align-items:center;justify-content:center;transition:transform .15s,background .15s;z-index:10;padding:0}
 #nsx-clear-unread-btn:hover{background:rgba(200,60,40,1);transform:scale(1.25)}
 #nsx-clear-unread-btn.nsx-loading{opacity:.4;pointer-events:none;animation:nsx-spin .8s linear infinite}
 #nsx-clear-unread-btn svg{display:block;pointer-events:none}
@@ -1454,6 +1454,41 @@
         default: visitedColor
     }, Symbol.toStringTag, { value: 'Module' }));
 
+// 自定义导航链接 - 邮箱
+const emailNavLink = {
+    id: "emailNavLink",
+    order: 45,
+    init(ctx) {
+            const tryInsert = () => {
+            // 找到文字是 DeepFlood 的那个 a 标签
+            const allLinks = document.querySelectorAll('header a');
+            const deepFloodLink = [...allLinks].find(a => a.textContent.trim() === 'DeepFlood');
+            if (!deepFloodLink) return false;
+            // 防止重复插入
+            if (document.getElementById('nsx-email-nav')) return true;
+            const newLink = document.createElement('a');
+            newLink.id = 'nsx-email-nav';
+            newLink.href = 'https://seek.li/';
+            newLink.textContent = '邮箱';
+            newLink.target = '_blank';
+            newLink.rel = 'noopener noreferrer';
+            // 复制 DeepFlood 的 class，保持样式一致
+            newLink.className = deepFloodLink.className;
+            newLink.style.marginLeft = '16px';
+            deepFloodLink.after(newLink);
+            return true;
+        };
+        if (!tryInsert()) {
+            const timer = setInterval(() => { if (tryInsert()) clearInterval(timer); }, 200);
+            setTimeout(() => clearInterval(timer), 5000);
+        }
+    }
+};
+const __vite_glob_0_20 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+    __proto__: null,
+    default: emailNavLink
+}, Symbol.toStringTag, { value: 'Module' }));
+
     // ===== SVG 图标 =====
     const SVG_SPRITE = `<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
 <symbol id="copy" viewBox="0 0 48 48"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M13 12.432v-4.62A2.813 2.813 0 0 1 15.813 5h24.374A2.813 2.813 0 0 1 43 7.813v24.375A2.813 2.813 0 0 1 40.188 35h-4.672M7.813 13h24.374A2.813 2.813 0 0 1 35 15.813v24.374A2.813 2.813 0 0 1 32.188 43H7.813A2.813 2.813 0 0 1 5 40.188V15.813A2.813 2.813 0 0 1 7.813 13Z"/></symbol>
@@ -1534,7 +1569,8 @@
             "./features/signinTips.js": __vite_glob_0_16,
             "./features/smoothScroll.js": __vite_glob_0_17,
             "./features/userCardExt.js": __vite_glob_0_18,
-            "./features/visitedColor.js": __vite_glob_0_19
+            "./features/visitedColor.js": __vite_glob_0_19,
+			"./features/emailNavLink.js": __vite_glob_0_20
         });
         Object.values(mods).forEach(m => m.default && define(m.default));
 
